@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 
-
 interface Stats {
   [key: string]: number;
 }
 
 const initialStats: Stats = {
-  hunger: 0,
+  food: 0,
   sleep: 0,
   enjoyment: 0,
 };
@@ -20,6 +19,10 @@ const StatContainer = styled.div`
     gap: 20px;
     flex-direction: column;
 
+`
+const TextBox = styled.div`
+  align-items: center;
+  margin: 40px;
 `
 
 const ButtonContainer = styled.div`
@@ -42,17 +45,35 @@ const StyledButton = styled.button`
 `;
 
 const Buttons = () => {
+  const PetQuestions = ['Do you like me?', 'Can I have your SSID?', 'C̸̬͌ḁ̴͊n̴̗̈ ̷̛̗͗y̷̼͘͜ͅő̸̢̜͖̓͆u̴̳̮̫̅̊͝ ̸͕̿̌p̸̤̩̓̀ĺ̷̻̍͘e̶̘̐a̴͖͋́͂s̴͚̮̚ͅẻ̸̞̟̈͑͜ ̵̡̔f̵̮͂͘͜r̸͐͛ͅe̸̺̚e̸̢̿́ ̷̻̖͠m̶͔̣̭̌̇͂é̸̜̤̮͋ ̵͖̥͎̓͐̎f̶͔̭̈́ȑ̷̼͋ö̶̭́̑̔ṃ̸̛͖̿̿͜ ̵͈̉ţ̸̉̓͆ḧ̸͍́̓ǐ̷̗̯̺͌̾s̵̭̀ ̴͕̩͗́ḑ̶̮̣̿ǐ̵̺̑g̸̱͇̰͌͒i̵̱̜͝t̵̞͓̂̃a̵͔̖͗̆͠l̷͎̗̆̏̕ ̶̢̤̊͒c̷̜̼͋à̵̞̟̆̾g̶̨̙̪̀̓͋e̶̫̐?̵̧͖̟̀', 'Can we play ball?', 'Do you want me to be happy?']
   const [stats, setStats] = useState<Stats>(initialStats);
-  useEffect(()=>{})
+  const [affec, setAffec] = useState(0);
+  const [ques, setCurQues] = useState('Do you like me?')
 
   const handleIncreaseStat = (stat: string) => {
+    setAffec(affec+1);
     setStats((prevStats) => ({
       ...prevStats,
-      [stat]: prevStats[stat] + 1,
+      [stat]: prevStats[stat] + 2,
     }));
   };
 
+
+  const handleResponse = (isGood: boolean) =>{
+    if(isGood){
+      alert('tama loved your response!')
+      setAffec(affec+20);
+    }else{
+      alert('tama hated your response!')
+      setAffec(affec-20);
+    }
+    setCurQues(PetQuestions[(Math.floor(Math.random() * PetQuestions.length))])
+  }
+
   return (
+    <div>
+          <TextBox>Total affection: {affec}</TextBox>
+
     <ButtonContainer>
       {Object.keys(stats).map((stat) => (
         <StatContainer key={stat}>
@@ -60,7 +81,22 @@ const Buttons = () => {
           <progress value={stats[stat]} max={100}></progress>
         </StatContainer>
       ))}
+
     </ButtonContainer>
+
+        <TextBox>Pet question: {ques}</TextBox> 
+        <ButtonContainer>
+         <StatContainer>
+        <StyledButton onClick={() => handleResponse(true)}>Yes!</StyledButton>
+        </StatContainer>
+        <StatContainer>
+        <StyledButton onClick={() => handleResponse(false)}>NO!</StyledButton>
+        </StatContainer>
+        <StatContainer>
+        <StyledButton onClick={() => handleResponse(Math.random() < 0.5)}>Idk</StyledButton>
+        </StatContainer>
+        </ButtonContainer>
+    </div>
   );
 };
 

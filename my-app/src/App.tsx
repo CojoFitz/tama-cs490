@@ -2,19 +2,19 @@ import React from 'react';
 import './App.css';
 import Buttons from './components/reusable/MenuButton';
 import animationVid from './Animation.mp4';
-
+import anime from './anime.gif'
 
 
 function App() {
   return (
     <>   
-      <div className='Stats_container'>
-         <Buttons></Buttons>
-        <div className='TemporaryVid'>
+            <div style={{margin: "auto"}}>
         
-           <video src={animationVid} className='TemporaryVid' preload='auto' controls autoPlay loop />
-        </div>
+     </div>
+      <div className='Stats_container'>
+                <img src={anime} className='TemporaryVid'/>
 
+         <Buttons></Buttons>
       </div>
     </>
   );
