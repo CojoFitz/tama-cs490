@@ -45,7 +45,7 @@ const StyledButton = styled.button`
 `;
 
 const Buttons = () => {
-  const PetQuestions = ['Do you like me?', 'Can I have your SSID?', 'C̸̬͌ḁ̴͊n̴̗̈ ̷̛̗͗y̷̼͘͜ͅő̸̢̜͖̓͆u̴̳̮̫̅̊͝ ̸͕̿̌p̸̤̩̓̀ĺ̷̻̍͘e̶̘̐a̴͖͋́͂s̴͚̮̚ͅẻ̸̞̟̈͑͜ ̵̡̔f̵̮͂͘͜r̸͐͛ͅe̸̺̚e̸̢̿́ ̷̻̖͠m̶͔̣̭̌̇͂é̸̜̤̮͋ ̵͖̥͎̓͐̎f̶͔̭̈́ȑ̷̼͋ö̶̭́̑̔ṃ̸̛͖̿̿͜ ̵͈̉ţ̸̉̓͆ḧ̸͍́̓ǐ̷̗̯̺͌̾s̵̭̀ ̴͕̩͗́ḑ̶̮̣̿ǐ̵̺̑g̸̱͇̰͌͒i̵̱̜͝t̵̞͓̂̃a̵͔̖͗̆͠l̷͎̗̆̏̕ ̶̢̤̊͒c̷̜̼͋à̵̞̟̆̾g̶̨̙̪̀̓͋e̶̫̐?̵̧͖̟̀', 'Can we play ball?', 'Do you want me to be happy?']
+  const PetQuestions = ['Do you like me?', 'Can I have your SSID?', 'Can we play ball?', 'Do you want me to be happy?']
   const [stats, setStats] = useState<Stats>(initialStats);
   const [affec, setAffec] = useState(0);
   const [ques, setCurQues] = useState('Do you like me?')
