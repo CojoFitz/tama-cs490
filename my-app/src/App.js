@@ -5,43 +5,69 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import TAMA from "./pages/TAMA";
+import axios from "axios";
+import { AuthContext } from "./helpers/AuthContext";
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false,
+  });
+
   useEffect(() => {
-    const accessToken = sessionStorage.getItem("accessToken");
-    if (accessToken) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
+    axios
+      .get("http://localhost:3001/auth/auth", {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then((response) => {
+        if (response.data.error) {
+          setAuthState({ ...authState, status: false });
+        } else {
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            status: true,
+          });
+        }
+      });
   }, []);
-    
+
   const logout = () => {
-    sessionStorage.removeItem("accessToken");
-    setIsLoggedIn(false);
+    localStorage.removeItem("accessToken");
+    setAuthState({ username: "", id: 0, status: false });
+    window.location.href = "/Login";
   };
+
 
   return (
     <div className="App">
-      <Router>
-        <div className="navbar">
-            <Link to="/"> Home </Link>
-            <Link to="/TAMA"> TAMA </Link>
-            {!isLoggedIn && <Link to="/Register"> Register </Link>}
-            {!isLoggedIn && <Link to="/Login"> Log In </Link>}
-            {isLoggedIn && (
-              <span className="logout-link" onClick={logout}>Log Out</span>
+      <AuthContext.Provider value={{ authState, setAuthState }}>
+        <Router>
+          <div className="navbar">
+            {authState.status && (
+              <Link to="/TAMA"> TAMA </Link>
             )}
-        </div>
-        <Routes>
-          <Route path="/"  element={<Home/>} />
-          <Route path="/TAMA"  element={<TAMA/>} />
-          {!isLoggedIn && <Route path="/Register"  element={<Register/>} />}
-          {!isLoggedIn && <Route path="/Login"  element={<Login/>} />}
-        </Routes>
-      </Router>
+            {!authState.status && (
+              <>
+                <Link to="/Register"> Register </Link>
+                <Link to="/Login"> Log In </Link>
+              </>
+            )}
+            {authState.status && <span className="logout-link" onClick={logout}> Logout</span>}
+          </div>
+          <Routes>
+            <Route path="/"  element={<Home/>} />
+            <Route path="/TAMA"  element={<TAMA/>} />
+            <Route path="/Register"  element={<Register/>} />
+            <Route path="/Login"  element={<Login/>}/>
+          </Routes>
+        </Router>
+      </AuthContext.Provider>
     </div>
   );
 }
