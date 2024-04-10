@@ -3,6 +3,12 @@ import axios from "axios";
 import styled from "styled-components";
 import { AuthContext } from "../helpers/AuthContext";
 import anime from '../anime.gif'
+import chirp from '../petchirp.mp4'
+import snore from '../petsnores.mp4'
+import toy from '../pettoy.mp4'
+import munch from '../petmunch.mp4'
+
+
 
 const StatContainer = styled.div`
     display: flex;
@@ -35,7 +41,7 @@ const StyledButton = styled.button`
 `;
 
 
-function TAMA() {
+function TAMA({ setAlert }) {
   const [pet, setPet] = useState(null);
   const { authState } = useContext(AuthContext);
   const username = authState.username;
@@ -49,7 +55,7 @@ function TAMA() {
         const petData = response.data[0];
         setPet(petData);
         if (petData) {
-          axios.get(`http://localhost:3001/dialogues/${petData.id}`)
+          axios.get(`http://localhost:3001/dialogues/${petData.personality}`)
             .then((response) => {
               const fetchedDialogues = response.data;
               console.log("Dialogues fetched successfully:", fetchedDialogues);
@@ -67,6 +73,9 @@ function TAMA() {
   }, []);
 
   const updateStat = (stat, value) => {
+    if(value > 100){
+      value =100;
+    }
     axios.put(`http://localhost:3001/pets/updateStats/${pet.id}`, { stat, value })
       .then(response => {
         console.log(`Pet ${stat} increased`);
@@ -77,34 +86,111 @@ function TAMA() {
       });
   };
 
-  const feed = () => {
-    updateStat("hunger", pet.hunger + 1);
+  const feed = (value) => {
+    console.log("PERSONALITY: " + value);
+    if (pet.hunger >= 100) {
+      setAlert({ message: "I can't eat any more!", type: "warning" });
+    } else {
+      switch(value) {
+        case 1:
+          updateStat("hunger", pet.hunger + 8);
+          break;
+        case 2:
+          updateStat("hunger", pet.hunger + 10);
+          break;
+        case 3:
+          updateStat("hunger", pet.hunger + 6);
+          break;
+        case 4:
+          updateStat("hunger", pet.hunger + 5);
+          break;
+        case 5:
+          updateStat("hunger", pet.hunger + 8);
+          break;
+        default:
+          return "";
+      }
+  }
   };
 
-  const increaseEnergy = () => {
-    updateStat("sleepiness", pet.sleepiness + 1);
+  const increaseEnergy = (value) => {
+    console.log("PERSONALITY: " + value);
+    if (pet.sleepiness >= 100) {
+      setAlert({ message: "I'm not tired right now!", type: "warning" });
+    } else {
+      switch(value) {
+        case 1:
+          updateStat("sleepiness", pet.sleepiness + 10);
+          break;
+        case 2:
+          updateStat("sleepiness", pet.sleepiness + 10);
+          break;
+        case 3:
+          updateStat("sleepiness", pet.sleepiness + 10);
+          break;
+        case 4:
+          updateStat("sleepiness", pet.sleepiness + 10);
+          break;
+        case 5:
+          updateStat("sleepiness", pet.sleepiness + 10);
+          break;
+        default:
+          return "";
+      }
+    }
   };
 
-  const play = () => {
-    updateStat("fun", pet.fun + 1);
+  const play = (value) => {
+    console.log("PERSONALITY: " + value);
+    if (pet.fun >= 100) {
+      setAlert({ message: "I'm not in the mood right now.", type: "warning" });
+    } else {
+      switch(value) {
+        case 1:
+          updateStat("fun", pet.fun + 8);
+          break;
+        case 2:
+          updateStat("fun", pet.fun + 2);
+          break;
+        case 3:
+          updateStat("fun", pet.fun + 5);
+          break;
+        case 4:
+          updateStat("fun", pet.fun + 5);
+          break;
+        case 5:
+          updateStat("fun", pet.fun + 8);
+          break;
+        default:
+          return "";
+      }
+  }
   };
 
   const increaseAffection = (value) => {
-    switch(value) {
-      case 1:
-        updateStat("affection", pet.affection + 2);
-      case 2:
-        updateStat("affection", pet.affection - 5);
-      case 3:
-        updateStat("affection", pet.affection + 3);
-        return "Playful";
-      case 4:
-        updateStat("affection", pet.affection + 1 );
-      case 5:
-        updateStat("affection", pet.affection + 2);
-        return "Calm";
-      default:
-        return "";
+    console.log("PERSONALITY: " + value);
+    if (pet.affection >= 100) {
+      setAlert({ message: "My love for you cannot grow any more!", type: "warning" });
+    } else {
+      switch(value) {
+        case 1:
+          updateStat("affection", pet.affection + 3);
+          break;
+        case 2:
+          updateStat("affection", pet.affection + 1);
+          break;
+        case 3:
+          updateStat("affection", pet.affection + 3);
+          break;
+        case 4:
+          updateStat("affection", pet.affection + 2);
+          break;
+        case 5:
+          updateStat("affection", pet.affection + 2);
+          break;
+        default:
+          return "";
+      }
     }
   };
 
@@ -124,6 +210,14 @@ function TAMA() {
         return "";
     }
   };
+
+  const playSound = (soundId, stat) => {
+    if (stat < 100) {
+      const audio = document.getElementById(soundId);
+      audio.play();
+    }
+  };
+  
   
 
   return ( 
@@ -134,40 +228,43 @@ function TAMA() {
       <div className='Stats_container'>
         {pet && (
           <div>
-            <h2>{pet.name} says: {dialogue[Math.floor(Math.random() * dialogue.length)]}</h2>
+            <div>
+            <h2>{pet.name} says:</h2>
+            <h3>{dialogue[Math.floor(Math.random() * dialogue.length)]}</h3>
             <p>Personality: {getPersonalityName(pet.personality)}</p>
+          </div>
             <ButtonContainer>
               <StatContainer>
-                <StyledButton disabled={pet.hunger >= 100} onClick={() => feed()}>
-                  Increase Hunger
+                <audio id="munchAudio" src={munch}></audio>
+                <StyledButton onClick={() => { playSound("munchAudio", pet.hunger); feed(pet.personality);}}>
+                  FEED
                 </StyledButton>
                 <progress value={(pet.hunger / 100) * 100} max={100}></progress>
-                <p>{pet.hunger} / 100</p>
-                {pet.hunger >= 100 && <p>I can't eat any more!</p>}
+                <p>Full Belly: {pet.hunger} / 100</p>
               </StatContainer>
               <StatContainer>
-                <StyledButton disabled={pet.sleepiness >= 100} onClick={() => increaseEnergy()}>
-                  Increase Energy
+                <audio id="snoreAudio" src={snore}></audio>
+                <StyledButton onClick={() => { playSound("snoreAudio", pet.sleepiness); increaseEnergy(pet.personality);}}>
+                  REST
                 </StyledButton>
                 <progress value={(pet.sleepiness / 100) * 100} max={100}></progress>
-                <p>{pet.sleepiness} / 100</p>
-                {pet.sleepiness >= 100 && <p>I'm well rested.</p>}
+                <p>Energy: {pet.sleepiness} / 100</p>
               </StatContainer>
               <StatContainer>
-                <StyledButton disabled={pet.fun >= 100} onClick={() => play()}>
-                  Increase Fun
+                <audio id="toyAudio" src={toy}></audio>
+                <StyledButton onClick={() => { playSound("toyAudio", pet.fun); play(pet.personality);}}>
+                  PLAY
                 </StyledButton>
                 <progress value={(pet.fun / 100) * 100} max={100}></progress>
-                <p>{pet.fun} / 100</p>
-                {pet.fun >= 100 && <p>I'm plenty entertained.</p>}
+                <p>Fun: {pet.fun} / 100</p>
               </StatContainer>
               <StatContainer>
-                <StyledButton disabled={pet.affection >= 100} onClick={() => increaseAffection(pet.personality)}>
-                  Hug
+                <audio id="chirpAudio" src={chirp}></audio>
+                <StyledButton onClick={() => { playSound("chirpAudio", pet.affection); increaseAffection(pet.personality)}}>
+                  HUG
                 </StyledButton>
                 <progress value={(pet.affection / 100) * 100} max={100}></progress>
-                <p>{pet.affection} / 100</p>
-                {pet.affection >= 100 && <p>I already love you!</p>}
+                <p>Affection: {pet.affection} / 100</p>
               </StatContainer>
             </ButtonContainer>
 

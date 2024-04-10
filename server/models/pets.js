@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         affection: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 50
+            defaultValue: 20
         },
     });
 

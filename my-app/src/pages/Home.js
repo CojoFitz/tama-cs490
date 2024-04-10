@@ -11,8 +11,6 @@ function App() {
      </div>
       <div className='Stats_container'>
                 <img src={anime} className='TemporaryVid'/>
-
-         <Buttons></Buttons>
       </div>
     </>
   );
