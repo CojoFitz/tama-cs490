@@ -32,7 +32,74 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.Stats_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 3em;
+}
+
+.TemporaryVid {
+
+  display: block;
+  width: 25em;
+  height: 25em;
+}
+
+
+/*log in/register*/
+.centeredContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.formContainer {
+  width: 300px;
+  padding: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.formContainer label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formContainer input[type="text"],
+.formContainer input[type="email"],
+.formContainer input[type="password"] {
+  width: calc(100% - 16px); 
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.formContainer button {
+  width: calc(100% - 16px);
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.formContainer button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
 }
