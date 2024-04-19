@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import petSprite from "../../petSprite/TestSprite.png";
+import petSprite from "../../petSprite/PetSprite.png";
 // import petSprite from "../../petSprite/petSprite2.jpeg";
 
 type AnimationState = {
@@ -9,14 +9,15 @@ type AnimationState = {
 
 function PetCanvas(props: object) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [currentAction, setCurrentAction] = useState<string>("Idle");
+    const [currentAction, setCurrentAction] = useState<string>("Greet");
 
     const animationState: AnimationState = {
-        "Idle": [0, 10, -1],
-        "Walk": [1, 10, 2],
-        "Run": [2, 10, 2],
-        "Push": [3, 10, 6],
-        "Jump": [4, 10, 3],
+        "Idle": [0, 64, -1],
+        "Feed": [1, 64, 2],
+        "Excited": [2, 64, 2],
+        "Sleep":[3,64,2],
+        "Talk": [4, 64, 6],
+        "Greet": [5, 45, 3],
     }
 
     useEffect(() => {
@@ -27,12 +28,12 @@ function PetCanvas(props: object) {
         const context = canvas.getContext('2d');
         if (!context) return;
 
-        const CANVAS_WIDTH = canvas.width = 128;
-        const CANVAS_HEIGHT = canvas.height = 128;
-        const spriteWidth = 128;
-        const spriteHeight = 128;
+        const CANVAS_WIDTH = canvas.width = 400;
+        const CANVAS_HEIGHT = canvas.height = 400;
+        const spriteWidth = 400;
+        const spriteHeight = 400;
 
-        const framesPerSecond = 60; // Each frame runs once every 1/60 second
+        const framesPerSecond = 25; // Each frame runs once every 1/60 second
         const frameTime = 1000/framesPerSecond; // Interval between frames in milliseconds
         let animationId: number;
         let fn = 0;
@@ -87,7 +88,7 @@ function PetCanvas(props: object) {
         <>
             <canvas ref={canvasRef} {...props} />
             <h1 style={{ textAlign: "center", color: "white" }}>{currentAction.toUpperCase()}</h1>
-            {["Idle", "Walk", "Run", "Push", "Jump"].map(name => (
+            {["Idle", "Feed", "Excited", "Greet", "Talk", "Sleep"].map(name => (
                 <button key={name} onClick={() => setCurrentAction(name)}> {name} </button>
             ))}
         </>
