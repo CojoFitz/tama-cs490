@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import petSprite from "../../petSprite/PetSprite.png";
+import petSprite from "../../petSprite/PetSprte.png";
 // import petSprite from "../../petSprite/petSprite2.jpeg";
 
 type AnimationState = {
@@ -13,11 +13,14 @@ function PetCanvas(props: object) {
 
     const animationState: AnimationState = {
         "Idle": [0, 64, -1],
-        "Feed": [1, 64, 2],
-        "Excited": [2, 64, 2],
-        "Sleep":[3,64,2],
-        "Talk": [4, 64, 6],
-        "Greet": [5, 45, 3],
+        "Feed": [1, 64, 1],
+        "Excited": [2, 64, 1],
+        "Sleep":[3,64,1],
+        "Talk": [4, 64, 2],
+        "Greet": [5, 46, 2],
+        "Nap": [6, 63, -1],
+        "Ex": [7, 62, 5],
+       
     }
 
     useEffect(() => {
@@ -44,11 +47,12 @@ function PetCanvas(props: object) {
 
             const elapsedTime = timestamp - lastTimestamp;
             
-            if (elapsedTime > frameTime){ //Runs every second 
+            if (elapsedTime > frameTime){ 
                     lastTimestamp = timestamp;
                     fn = (fn + 1) % animationState[currentAction][1];
                     if (fn === 0) {
                         if (animationState[currentAction][2] === -1) animationState[currentAction][2] = -1;
+                        
                         animationState[currentAction][2]--;
                         if (animationState[currentAction][2] === 0) {
                             cancelAnimationFrame(animationId);
@@ -56,9 +60,16 @@ function PetCanvas(props: object) {
                             return;
                         }
                     }
+                    
+                    if (currentAction === "Sleep"){
+                        if (fn == 62){
+                           setCurrentAction("Nap")
+                        }
+                    }
                 
             }
-
+            
+           
 
             const xIndex = fn;
             const yIndex = animationState[currentAction][0];
@@ -86,9 +97,9 @@ function PetCanvas(props: object) {
 
     return (
         <>
-            <canvas ref={canvasRef} {...props} />
+            <canvas ref={canvasRef} {...props} onMouseOverCapture={()=>setCurrentAction("Excited")} />
             <h1 style={{ textAlign: "center", color: "white" }}>{currentAction.toUpperCase()}</h1>
-            {["Idle", "Feed", "Excited", "Greet", "Talk", "Sleep"].map(name => (
+            {["Idle", "Feed", "Excited", "Greet", "Talk", "Sleep", "Nap", "Ex"].map(name => (
                 <button key={name} onClick={() => setCurrentAction(name)}> {name} </button>
             ))}
         </>
