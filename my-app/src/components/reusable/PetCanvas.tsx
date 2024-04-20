@@ -6,11 +6,21 @@ type AnimationState = {
     [key: string]: [row:number, col:number, repeat:number];
 };
 
-
-function PetCanvas(props: object) {
+interface PetCanvasProps {
+    givenaction: string;
+    resetaction: ()=>void;
+  }
+  
+function PetCanvas(props: PetCanvasProps) {
+    const givenAction = props.givenaction;
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [currentAction, setCurrentAction] = useState<string>("Greet");
+    const [currentAction, setCurrentAction] = useState<string>(givenAction);
+    const resetaction = props.resetaction;
+    useEffect(()=>{
+        setCurrentAction(givenAction);
+    },[givenAction]);
 
+    
     const animationState: AnimationState = {
         "Idle": [0, 64, -1],
         "Feed": [1, 64, 1],
@@ -18,8 +28,8 @@ function PetCanvas(props: object) {
         "Sleep":[3,64,1],
         "Talk": [4, 64, 2],
         "Greet": [5, 46, 2],
-        "Nap": [6, 63, -1],
-        "Ex": [7, 62, 5],
+        "Nap": [6, 63, 3],
+        "Play": [7, 62, 5],
        
     }
 
@@ -55,8 +65,14 @@ function PetCanvas(props: object) {
                         
                         animationState[currentAction][2]--;
                         if (animationState[currentAction][2] === 0) {
+                            if (currentAction == "Nap"){
+                                setCurrentAction("Excited");
+                                return;
+                            }
+
                             cancelAnimationFrame(animationId);
                             setCurrentAction("Idle");
+                            resetaction();
                             return;
                         }
                     }
@@ -98,10 +114,7 @@ function PetCanvas(props: object) {
     return (
         <>
             <canvas ref={canvasRef} {...props} onMouseOverCapture={()=>setCurrentAction("Excited")} />
-            <h1 style={{ textAlign: "center", color: "white" }}>{currentAction.toUpperCase()}</h1>
-            {["Idle", "Feed", "Excited", "Greet", "Talk", "Sleep", "Nap", "Ex"].map(name => (
-                <button key={name} onClick={() => setCurrentAction(name)}> {name} </button>
-            ))}
+          
         </>
     );
 }

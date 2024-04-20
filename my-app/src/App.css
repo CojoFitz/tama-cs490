@@ -2,9 +2,9 @@
   width: 100vw;
   height: 100vh;
   text-align: center;
-  background-image: url("./petSprite/background.png");
+  background-image: url("https://cdn.vectorstock.com/i/500p/81/34/cartoon-winter-nature-landscape-frozen-pond-lake-vector-41328134.jpg");
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
 
 }
 

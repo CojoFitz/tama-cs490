@@ -7,7 +7,7 @@ function App() {
     <>    
       <div className='App'>
         <div style={{padding: "10px",position: "relative", margin: "0 auto", width: "fit-content", top:"100px"}}>
-        <PetCanvas ></PetCanvas>
+        {/* <PetCanvas ></PetCanvas> */}
       </div>
       </div>
     </>
