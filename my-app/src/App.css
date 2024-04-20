@@ -1,9 +1,15 @@
 .App {
+  width: 100vw;
+  height: 100vh;
   text-align: center;
+  background-image: url("./petSprite/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 4vmin;
   pointer-events: none;
 }
 
@@ -32,6 +38,7 @@
   from {
     transform: rotate(0deg);
   }
+
 
   to {
     transform: rotate(360deg);
