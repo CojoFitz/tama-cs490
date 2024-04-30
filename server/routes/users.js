@@ -6,26 +6,33 @@ const bcrypt = require("bcrypt");
 
 const { sign } = require("jsonwebtoken");
 
-
 router.post("/register", async (req, res) => {
-  
   const { username, email, password, petName, personality } = req.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const userCreationResult = await sequelize.query("CALL createUser(?, ?, ?, ?, ?)", {
-      replacements: [username, email, hashedPassword, petName, personality],
-      type: sequelize.QueryTypes.RAW,
-    });
+    const userCreationResult = await sequelize.query(
+      "CALL createUser(?, ?, ?, ?, ?)",
+      {
+        replacements: [username, email, hashedPassword, petName, personality],
+        type: sequelize.QueryTypes.RAW,
+      }
+    );
     console.log("User created successfully:", userCreationResult);
     res.json({ success: true, message: "User registered successfully" });
   } catch (error) {
-    console.error("Error registering user:", error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
+    if (error.original && error.original.errno === 1062) {
+      console.error("Duplicate entry:", error);
+      res.status(400).json({ success: false, message: "Duplicate entry" });
+    } else {
+      console.error("Error registering user:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal Server Error" });
+    }
   }
 });
-
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -55,7 +62,7 @@ router.get("/auth", validateToken, (req, res) => {
 
 router.get("/info/:username", async (req, res) => {
   const username = req.params.username;
-  console.log("username: "+ username);
+  console.log("username: " + username);
   try {
     const info = await users.findOne({
       where: { username: username },
@@ -88,13 +95,15 @@ router.put("/updatepassword/:username", async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    await users.update({ password: hashedPassword }, { where: { username: username } });
+    await users.update(
+      { password: hashedPassword },
+      { where: { username: username } }
+    );
     res.json({ success: true, message: "Password updated successfully" });
   } catch (error) {
     console.error("Error updating password:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
-
 
 module.exports = router;

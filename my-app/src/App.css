@@ -1,9 +1,15 @@
 .App {
+  width: 100vw;
+  height: 100vh;
   text-align: center;
+  background-image: url("https://cdn.vectorstock.com/i/500p/81/34/cartoon-winter-nature-landscape-frozen-pond-lake-vector-41328134.jpg");
+  background-repeat: no-repeat;
+  background-size: contain;
+
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 4vmin;
   pointer-events: none;
 }
 
@@ -32,6 +38,7 @@
   from {
     transform: rotate(0deg);
   }
+
 
   to {
     transform: rotate(360deg);

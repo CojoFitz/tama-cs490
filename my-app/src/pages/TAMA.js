@@ -7,6 +7,7 @@ import chirp from '../petchirp.mp4'
 import snore from '../petsnores.mp4'
 import toy from '../pettoy.mp4'
 import munch from '../petmunch.mp4'
+import PetCanvas from "../components/reusable/PetCanvas";
 
 
 
@@ -46,9 +47,12 @@ function TAMA({ setAlert }) {
   const { authState } = useContext(AuthContext);
   const username = authState.username;
   const [dialogue, setDialogue] = useState([]);
-  const PetQuestions = ['Do you like me?', 'Can I have your SSID?', 'Can we play ball?', 'Do you want me to be happy?']
-  const [ques, setCurQues] = useState('Do you like me?')
+  const [petAction, setpetAction] = useState("Greet")
 
+  const resetaction = ()=>{
+    console.log("HOLLA")
+    setpetAction("Idle");
+  }
   useEffect(() => {
     axios.get(`http://localhost:3001/pets/byName/${username}`)
       .then((response) => {
@@ -90,7 +94,9 @@ function TAMA({ setAlert }) {
     console.log("PERSONALITY: " + value);
     if (pet.hunger >= 100) {
       setAlert({ message: "I can't eat any more!", type: "warning" });
+      setpetAction("Talk")
     } else {
+      setpetAction("Feed");
       switch(value) {
         case 1:
           updateStat("hunger", pet.hunger + 8);
@@ -117,7 +123,12 @@ function TAMA({ setAlert }) {
     console.log("PERSONALITY: " + value);
     if (pet.sleepiness >= 100) {
       setAlert({ message: "I'm not tired right now!", type: "warning" });
+      setpetAction("Talk")
     } else {
+      
+        setpetAction("Sleep")
+    
+      
       switch(value) {
         case 1:
           updateStat("sleepiness", pet.sleepiness + 10);
@@ -144,7 +155,9 @@ function TAMA({ setAlert }) {
     console.log("PERSONALITY: " + value);
     if (pet.fun >= 100) {
       setAlert({ message: "I'm not in the mood right now.", type: "warning" });
+      setpetAction("Talk")
     } else {
+      setpetAction("Play");
       switch(value) {
         case 1:
           updateStat("fun", pet.fun + 8);
@@ -170,8 +183,10 @@ function TAMA({ setAlert }) {
   const increaseAffection = (value) => {
     console.log("PERSONALITY: " + value);
     if (pet.affection >= 100) {
+      setpetAction("Talk")
       setAlert({ message: "My love for you cannot grow any more!", type: "warning" });
     } else {
+      setpetAction("Excited")
       switch(value) {
         case 1:
           updateStat("affection", pet.affection + 3);
@@ -223,12 +238,14 @@ function TAMA({ setAlert }) {
   return ( 
     <div style={{ margin: "auto" }}>
       <div className='Stats_container'>
-          <img src={anime} className='TemporaryVid'/>
+          <div style={{backgroundColor:"#33223301", borderRadius:"50%", boxShadow:"2px 3px 4px 4px"}}>
+          <PetCanvas givenaction={petAction} resetaction={resetaction}></PetCanvas>
+          </div>
       </div>
       <div className='Stats_container'>
         {pet && (
           <div>
-            <div>
+            <div className='DialogueBox' style={{backgroundColor:"#33333322", padding:"1.5em", margin:"1.4em"}}>
             <h2>{pet.name} says:</h2>
             <h3>{dialogue[Math.floor(Math.random() * dialogue.length)]}</h3>
             <p>Personality: {getPersonalityName(pet.personality)}</p>
